@@ -3,7 +3,7 @@ import { Image } from "@chakra-ui/react";
 
 export default function Card({ rank, suit, isHidden = false }) {
     return (
-        <Box boxSize="sm">
+        <Box width="fit-content" height="fit-content">
             <Image
                 src={
                     isHidden
@@ -12,6 +12,8 @@ export default function Card({ rank, suit, isHidden = false }) {
                 }
                 alt={`${rank} of ${suit}`}
                 objectFit="contain"
+                w="250"
+                h="250"
             />
         </Box>
     );

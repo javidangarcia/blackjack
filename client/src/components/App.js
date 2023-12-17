@@ -2,25 +2,54 @@ import PlayerHand from "./PlayerHand";
 import { VStack } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { Blackjack } from "../blackjack";
 import DealerHand from "./DealerHand";
+import PlayerOptions from "./PlayerOptions";
+import { createDeck, shuffle } from "../utils";
 
 function App() {
-    const [blackjack, setBlackjack] = useState(null);
+    const [playerHand, setPlayerHand] = useState([]);
+    const [dealerHand, setDealerHand] = useState([]);
+    const [deck, setDeck] = useState([]);
+    const [isDealersTurn, setDealersTurn] = useState(false);
 
     useEffect(() => {
-        const newBlackjack = new Blackjack();
-        newBlackjack.startGame();
-        setBlackjack(newBlackjack);
+        const startingDeck = createDeck();
+        shuffle(startingDeck);
+
+        const startingPlayerHand = [...playerHand];
+        const startingDealerHand = [...dealerHand];
+
+        startingPlayerHand.push(startingDeck.pop());
+        startingDealerHand.push(startingDeck.pop());
+        startingPlayerHand.push(startingDeck.pop());
+        startingDealerHand.push(startingDeck.pop());
+
+        setPlayerHand(startingPlayerHand);
+        setDealerHand(startingDealerHand);
+        setDeck(startingDeck);
     }, []);
 
-    return blackjack ? (
-        <VStack>
+    const onPlayerHit = () => {
+        setPlayerHand([...playerHand, deck.pop()]);
+    };
+
+    const onPlayerStand = () => {
+        setDealersTurn(true);
+    };
+
+    return (
+        <VStack spacing={4}>
             <Text fontSize="5xl">Blackjack</Text>
-            <DealerHand blackjack={blackjack} />
-            <PlayerHand blackjack={blackjack} />
+            <DealerHand dealerHand={dealerHand} isDealersTurn={isDealersTurn} />
+            <PlayerHand playerHand={playerHand} />
+            {!isDealersTurn ? (
+                <PlayerOptions
+                    onPlayerHit={onPlayerHit}
+                    onPlayerStand={onPlayerStand}
+                />
+            ) : null}
         </VStack>
-    ) : null;
+    );
 }
 
 export default App;
