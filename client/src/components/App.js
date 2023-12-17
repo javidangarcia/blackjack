@@ -3,6 +3,7 @@ import { VStack } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Blackjack } from "../blackjack";
+import DealerHand from "./DealerHand";
 
 function App() {
     const [blackjack, setBlackjack] = useState(null);
@@ -16,6 +17,7 @@ function App() {
     return blackjack ? (
         <VStack>
             <Text fontSize="5xl">Blackjack</Text>
+            <DealerHand blackjack={blackjack} />
             <PlayerHand blackjack={blackjack} />
         </VStack>
     ) : null;

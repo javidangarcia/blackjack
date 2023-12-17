@@ -7,11 +7,14 @@ export class Blackjack {
         this.deck = new Deck();
         this.deck.shuffle();
         this.playerHand = [];
+        this.dealerHand = [];
     }
 
     startGame() {
         this.playerHand.push(this.deck.dealCard());
+        this.dealerHand.push(this.deck.dealCard());
         this.playerHand.push(this.deck.dealCard());
+        this.dealerHand.push(this.deck.dealCard());
     }
 }
 
