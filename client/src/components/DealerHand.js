@@ -1,28 +1,59 @@
 import Card from "./Card";
-import { HStack } from "@chakra-ui/react";
+import { HStack, Text, Box } from "@chakra-ui/react";
 
-export default function DealerHand({ dealerHand, isDealersTurn }) {
+export default function DealerHand({ dealerHand, isDealersTurn, dealerValue }) {
     return (
-        <HStack width="fit-content" height="fit-content" gap="5">
-            {dealerHand.map((card, index) => {
-                if (!isDealersTurn && index === 1)
-                    return (
-                        <Card
-                            rank={card.rank}
-                            suit={card.suit}
-                            isHidden={true}
-                            key={`${card.rank}-${card.suit}`}
-                        />
-                    );
-                else
-                    return (
-                        <Card
-                            rank={card.rank}
-                            suit={card.suit}
-                            key={`${card.rank}-${card.suit}`}
-                        />
-                    );
-            })}
+        <HStack width="100%" justifyContent="space-evenly">
+            <Box
+                borderRadius="full"
+                bg="green"
+                p="5"
+                w="80px"
+                h="80px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                visibility="hidden"
+            >
+                <Text color="white" fontSize="4xl">
+                    {dealerValue}
+                </Text>
+            </Box>
+            <HStack gap="5">
+                {dealerHand.map((card, index) => {
+                    if (!isDealersTurn && index === 1)
+                        return (
+                            <Card
+                                rank={card.rank}
+                                suit={card.suit}
+                                isHidden={true}
+                                key={`${card.rank}-${card.suit}`}
+                            />
+                        );
+                    else
+                        return (
+                            <Card
+                                rank={card.rank}
+                                suit={card.suit}
+                                key={`${card.rank}-${card.suit}`}
+                            />
+                        );
+                })}
+            </HStack>
+            <Box
+                borderRadius="full"
+                bg="green"
+                p="5"
+                w="80px"
+                h="80px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+            >
+                <Text color="white" fontSize="4xl" fontWeight="bold">
+                    {dealerValue}
+                </Text>
+            </Box>
         </HStack>
     );
 }
