@@ -1,33 +1,24 @@
-import Hand from "./Hand";
+import PlayerHand from "./PlayerHand";
 import { VStack } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-import { ranks, suits } from "../utils";
+import { useEffect, useState } from "react";
+import { Blackjack } from "../blackjack";
 
 function App() {
-  const [hand, setHand] = useState([]);
+    const [blackjack, setBlackjack] = useState(null);
 
-  useEffect(() => {
-    const starterHand = [
-      {
-        rank: ranks[Math.floor(Math.random() * ranks.length)],
-        suit: suits[[Math.floor(Math.random() * suits.length)]],
-      },
-      {
-        rank: ranks[Math.floor(Math.random() * ranks.length)],
-        suit: suits[[Math.floor(Math.random() * suits.length)]],
-      },
-    ];
+    useEffect(() => {
+        const newBlackjack = new Blackjack();
+        newBlackjack.startGame();
+        setBlackjack(newBlackjack);
+    }, []);
 
-    setHand(starterHand);
-  }, []);
-
-  return (
-    <VStack>
-      <Text fontSize="5xl">Blackjack</Text>
-      <Hand hand={hand} />
-    </VStack>
-  );
+    return blackjack ? (
+        <VStack>
+            <Text fontSize="5xl">Blackjack</Text>
+            <PlayerHand blackjack={blackjack} />
+        </VStack>
+    ) : null;
 }
 
 export default App;
