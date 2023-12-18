@@ -44,7 +44,6 @@ export default function Alert({ outcome }) {
             isOpen={showAlert}
             onClose={() => setShowAlert(false)}
             isCentered
-            bg="red"
         >
             <ModalOverlay />
             <ModalContent textAlign="center" p="10">

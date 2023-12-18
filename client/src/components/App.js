@@ -16,6 +16,7 @@ function App() {
     const [dealerValue, setDealerValue] = useState(0);
     const [outcome, setOutcome] = useState(null);
     const [resetGame, setResetGame] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const startingDeck = createDeck();
@@ -44,7 +45,13 @@ function App() {
         setResetGame(false);
     }, [resetGame]);
 
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
     const onPlayerHit = async () => {
+        setLoading(true);
+
+        await sleep(500);
+
         const card = deck.pop();
         setPlayerHand([...playerHand, card]);
 
@@ -53,6 +60,8 @@ function App() {
         if (playerValue + card.value > 21) {
             setOutcome("lose");
         }
+
+        setLoading(false);
     };
 
     const onPlayerStand = async () => {
@@ -60,8 +69,6 @@ function App() {
 
         let finalDealerValue = dealerValue + dealerHand[1].value;
         setDealerValue(finalDealerValue);
-
-        const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
         while (finalDealerValue < 17) {
             await sleep(1000);
@@ -95,6 +102,7 @@ function App() {
                 <PlayerOptions
                     onPlayerHit={onPlayerHit}
                     onPlayerStand={onPlayerStand}
+                    loading={loading}
                 />
             ) : null}
             {outcome && (
