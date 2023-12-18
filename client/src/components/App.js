@@ -1,25 +1,28 @@
 import PlayerHand from "./PlayerHand";
-import { VStack } from "@chakra-ui/react";
+import { VStack, Button } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import DealerHand from "./DealerHand";
 import PlayerOptions from "./PlayerOptions";
 import { createDeck, shuffle } from "../utils";
+import Alert from "./Alert";
 
 function App() {
     const [playerHand, setPlayerHand] = useState([]);
     const [dealerHand, setDealerHand] = useState([]);
     const [deck, setDeck] = useState([]);
-    const [isDealersTurn, setDealersTurn] = useState(false);
+    const [dealersTurn, setDealersTurn] = useState(false);
     const [playerValue, setPlayerValue] = useState(0);
     const [dealerValue, setDealerValue] = useState(0);
+    const [outcome, setOutcome] = useState(null);
+    const [resetGame, setResetGame] = useState(false);
 
     useEffect(() => {
         const startingDeck = createDeck();
         shuffle(startingDeck);
 
-        const startingPlayerHand = [...playerHand];
-        const startingDealerHand = [...dealerHand];
+        const startingPlayerHand = [];
+        const startingDealerHand = [];
 
         startingPlayerHand.push(startingDeck.pop());
         startingDealerHand.push(startingDeck.pop());
@@ -36,57 +39,70 @@ function App() {
         setDeck(startingDeck);
         setPlayerValue(startingPlayerValue);
         setDealerValue(startingDealerHand[0].value);
-    }, []);
+        setDealersTurn(false);
+        setOutcome(null);
+        setResetGame(false);
+    }, [resetGame]);
 
-    const onPlayerHit = () => {
+    const onPlayerHit = async () => {
         const card = deck.pop();
         setPlayerHand([...playerHand, card]);
 
         setPlayerValue((prevPlayerValue) => prevPlayerValue + card.value);
 
         if (playerValue + card.value > 21) {
-            alert("Player busted.");
+            setOutcome("lose");
         }
     };
 
     const onPlayerStand = async () => {
         setDealersTurn(true);
 
-        let updatedDealerValue = dealerValue + dealerHand[1].value;
-        setDealerValue(updatedDealerValue);
+        let finalDealerValue = dealerValue + dealerHand[1].value;
+        setDealerValue(finalDealerValue);
 
         const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-        while (updatedDealerValue < 17) {
+        while (finalDealerValue < 17) {
             await sleep(1000);
             const card = deck.pop();
-            updatedDealerValue += card.value;
-            setDealerValue(updatedDealerValue);
+            finalDealerValue += card.value;
+            setDealerValue(finalDealerValue);
             setDealerHand((prevDealerHand) => [...prevDealerHand, card]);
         }
 
-        if (updatedDealerValue > 21) {
-            alert("Dealer busted.");
+        await sleep(1000);
+
+        if (finalDealerValue > 21 || finalDealerValue < playerValue) {
+            setOutcome("win");
+        } else if (finalDealerValue === playerValue) {
+            setOutcome("tie");
+        } else {
+            setOutcome("lose");
         }
     };
-
-    useEffect(() => {}, dealerHand);
 
     return (
         <VStack spacing={4}>
             <Text fontSize="5xl">Blackjack</Text>
             <DealerHand
                 dealerHand={dealerHand}
-                isDealersTurn={isDealersTurn}
+                dealersTurn={dealersTurn}
                 dealerValue={dealerValue}
             />
             <PlayerHand playerHand={playerHand} playerValue={playerValue} />
-            {!isDealersTurn ? (
+            {!dealersTurn && outcome === null ? (
                 <PlayerOptions
                     onPlayerHit={onPlayerHit}
                     onPlayerStand={onPlayerStand}
                 />
             ) : null}
+            {outcome && (
+                <Button colorScheme="green" onClick={() => setResetGame(true)}>
+                    Play Again
+                </Button>
+            )}
+            <Alert outcome={outcome} />
         </VStack>
     );
 }

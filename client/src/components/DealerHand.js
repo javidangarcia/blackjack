@@ -1,7 +1,7 @@
 import Card from "./Card";
 import { HStack, Text, Box } from "@chakra-ui/react";
 
-export default function DealerHand({ dealerHand, isDealersTurn, dealerValue }) {
+export default function DealerHand({ dealerHand, dealersTurn, dealerValue }) {
     return (
         <HStack width="100%" justifyContent="space-evenly">
             <Box
@@ -21,7 +21,7 @@ export default function DealerHand({ dealerHand, isDealersTurn, dealerValue }) {
             </Box>
             <HStack gap="5">
                 {dealerHand.map((card, index) => {
-                    if (!isDealersTurn && index === 1)
+                    if (!dealersTurn && index === 1)
                         return (
                             <Card
                                 rank={card.rank}

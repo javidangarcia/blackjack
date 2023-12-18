@@ -6,7 +6,7 @@ export default function PlayerOptions({ onPlayerHit, onPlayerStand }) {
             <Button colorScheme="red" flex="1" onClick={onPlayerHit}>
                 Hit
             </Button>
-            <Button colorScheme="blue" flex="1" onClick={onPlayerStand}>
+            <Button colorScheme="messenger" flex="1" onClick={onPlayerStand}>
                 Stand
             </Button>
         </HStack>
