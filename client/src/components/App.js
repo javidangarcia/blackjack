@@ -53,11 +53,36 @@ function App() {
         await sleep(500);
 
         const card = deck.pop();
-        setPlayerHand([...playerHand, card]);
+        setPlayerHand((prevPlayerHand) => [...prevPlayerHand, card]);
 
-        setPlayerValue((prevPlayerValue) => prevPlayerValue + card.value);
+        let newPlayerValue;
 
-        if (playerValue + card.value > 21) {
+        setPlayerValue((prevPlayerValue) => {
+            newPlayerValue = prevPlayerValue + card.value;
+
+            const playerHasAce = playerHand.some(
+                (card) => card.rank === "A" && card.value === 11
+            );
+
+            if (newPlayerValue > 21 && (card.rank === "A" || playerHasAce)) {
+                newPlayerValue -= 10;
+                setPlayerHand((prevPlayerHand) =>
+                    prevPlayerHand.map((prevCard) =>
+                        prevCard.rank === "A" && prevCard.value === 11
+                            ? { ...prevCard, value: 1 }
+                            : prevCard
+                    )
+                );
+            }
+
+            return newPlayerValue;
+        });
+
+        await sleep(100);
+
+        console.log(newPlayerValue);
+
+        if (newPlayerValue > 21) {
             setOutcome("lose");
         }
 

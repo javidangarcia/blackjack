@@ -1,5 +1,4 @@
 export const ranks = {
-    A: 1,
     2: 2,
     3: 3,
     4: 4,
@@ -12,6 +11,7 @@ export const ranks = {
     J: 10,
     Q: 10,
     K: 10,
+    A: 11,
 };
 
 export const suits = ["Clubs", "Diamonds", "Hearts", "Spades"];
